@@ -1,8 +1,4 @@
-import {
-  ExecutionContext,
-  UnauthorizedException,
-  UseGuards,
-} from '@nestjs/common';
+import { UnauthorizedException, UseGuards } from '@nestjs/common';
 import {
   Args,
   Context,
@@ -30,11 +26,7 @@ export class CustomerResolver {
 
   @Query(() => [Customer])
   @UseGuards(JwtAuthGuard)
-  async customers(
-    @Args('data') { skip, take, where }: GetCustomerInput,
-    @Context() context: ExecutionContext,
-  ) {
-    console.log((context as any).req.allowedForRoles);
+  async customers(@Args('data') { skip, take, where }: GetCustomerInput) {
     return this.customerService.findAll({ skip, take, where });
   }
 

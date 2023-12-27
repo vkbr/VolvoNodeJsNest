@@ -18,7 +18,6 @@ export class RoleGuard extends AuthGuard('jwt') implements CanActivate {
   }
 
   getRequest(context: ExecutionContext) {
-    console.log('RoleGuard::getRequest');
     const ctx = GqlExecutionContext.create(context);
     return ctx.getContext().req;
   }
@@ -27,10 +26,6 @@ export class RoleGuard extends AuthGuard('jwt') implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const ctx = GqlExecutionContext.create(context);
-    console.log(
-      'RoleGuard',
-      GqlExecutionContext.create(context).getContext().req.user,
-    );
 
     const rolesDecoration = this.reflector.get<RoleDecoration>(
       ROLE_META_TAG,
@@ -47,12 +42,6 @@ export class RoleGuard extends AuthGuard('jwt') implements CanActivate {
         ctx.getArgs(),
         rolesDecoration.customerIdPath,
       );
-
-      console.log({
-        objectId,
-        roles: rolesDecoration.roles,
-        myRole: user.role,
-      });
 
       if (
         objectId !== user.id &&
