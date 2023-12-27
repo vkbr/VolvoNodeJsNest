@@ -2,6 +2,10 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Role {
+  name: String!
+}
+
 type Customer {
   id: ID!
 
@@ -11,6 +15,8 @@ type Customer {
   """Date and time when the object was updated last time."""
   updatedAt: Timestamp!
   email: String!
+  isVerified: Boolean!
+  role: Role!
 }
 
 """
@@ -18,9 +24,20 @@ type Customer {
 """
 scalar Timestamp
 
+type AuthResponse {
+  accessToken: String!
+  refreshToken: String!
+  customer: Customer!
+}
+
+type CustomerVerificationCode {
+  code: String!
+}
+
 type Query {
   customers(data: GetCustomerInput!): [Customer!]!
   customer(query: WhereCustomerInput!): Customer!
+  getVerificationCode(data: WhereCustomerInput!): CustomerVerificationCode!
 }
 
 input GetCustomerInput {
@@ -33,22 +50,37 @@ input GetCustomerInput {
 input WhereCustomerInput {
   id: String
   email: String
-  createdAt: Timestamp
-  updatedAt: Timestamp
 }
 
 type Mutation {
-  createCustomer(data: CreateCustomerInput!): Customer!
-  updateCustomer(data: UpdateCustomerInput!): Customer!
+  signIn(data: SigninInput!): AuthResponse!
+  signUp(data: SignupInput!): AuthResponse!
+  refreshAccessToken(data: AuthRefreshInput!): AuthResponse!
+  customer(data: UpdateCustomerInput!): Customer!
+  removeCustomer(data: WhereCustomerInput!): Customer
+  verifyCode(data: VerifyCodeInput!): Customer!
 }
 
-input CreateCustomerInput {
+input SigninInput {
   email: String!
   password: String!
 }
 
+input SignupInput {
+  email: String!
+  password: String!
+}
+
+input AuthRefreshInput {
+  refreshToken: String!
+}
+
 input UpdateCustomerInput {
-  id: String!
+  id: String
   email: String
   password: String
+}
+
+input VerifyCodeInput {
+  code: String!
 }

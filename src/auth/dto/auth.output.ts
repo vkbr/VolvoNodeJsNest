@@ -1,10 +1,14 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { Customer } from 'src/lib/entities/customer.entity';
 
 @ObjectType()
-export class SignInResponse {
-  @Field(() => String, { nullable: false })
-  accessToken: string;
+export class AuthResponse {
+  @Field()
+  accessToken!: string;
 
-  @Field(() => String, { nullable: false })
-  refreshToken: string;
+  @Field()
+  refreshToken!: string;
+
+  @Field()
+  customer!: Customer;
 }
